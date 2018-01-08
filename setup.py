@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from setuptools import setup
 from setuptools import find_packages
+from cx_Freeze import setup, Executable
 
 from os import path
 
@@ -31,6 +31,8 @@ setup(
     author='Rémi Alvergnat',
     author_email='toilal.dev@gmail.com',
     description='This CLI tool allows you to interact with a remote CFSSL server.',
+    options={"build_exe": {"packages": ["multiprocessing", "idna", "_cffi_backend", "pkg_resources._vendor"]}},
+    executables=[Executable("cfsslcli/__main__.py", targetName="cfssl.exe")],
     packages=find_packages(),
     install_requires=install_requires,
     tests_require=tests_require,

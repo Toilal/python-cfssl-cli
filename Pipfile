@@ -1,10 +1,15 @@
 [[source]]
+
 verify_ssl = true
 url = "https://pypi.python.org/simple"
 name = "pypi"
 
+
 [dev-packages]
+
 pytest = "*"
+cx-freeze = ">=6.0b1"
+
 
 [packages]
 
@@ -12,3 +17,8 @@ click = "*"
 cfssl = ">=0.0.3b243"
 cryptography = "*"
 pyyaml = "*"
+
+
+[pipenv]
+
+allow_prereleases = true
