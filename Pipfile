@@ -8,7 +8,7 @@ name = "pypi"
 [dev-packages]
 
 pytest = "*"
-cx-freeze = ">=6.0b1"
+pyinstaller = "*"
 
 
 [packages]

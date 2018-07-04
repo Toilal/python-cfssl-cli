@@ -1,8 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from setuptools import find_packages
-from cx_Freeze import setup, Executable
+from setuptools import find_packages, setup
 
 from os import path
 
@@ -25,16 +24,12 @@ entry_points = {
     ],
 }
 
-include_files = [("cfssl.yml.dist", "cfssl.yml")]
-
 setup(
     name='cfssl-cli',
-    version='0.0.1',
+    version='1.0.0',
     author='Rémi Alvergnat',
     author_email='toilal.dev@gmail.com',
     description='This CLI tool allows you to interact with a remote CFSSL server.',
-    options={"build_exe": {"packages": ["multiprocessing", "idna", "_cffi_backend", "pkg_resources._vendor"], "include_files": include_files}},
-    executables=[Executable("cfsslcli/__main__.py", targetName="cfssl.exe")],
     packages=find_packages(),
     install_requires=install_requires,
     tests_require=tests_require,
@@ -44,7 +39,7 @@ setup(
     download_url='https://github.com/Toilal/python-cfssl-cli',
     license='MIT',
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
         'Intended Audience :: Developers'
         'Intended Audience :: System Administrators',
