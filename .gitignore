@@ -3,6 +3,9 @@ __pycache__/
 *$py.class
 /*.der
 /*.pem
+/*.crt
+/*.key
 /cfssl.yml
 /build/
+/dist/
 

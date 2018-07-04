@@ -25,13 +25,15 @@ entry_points = {
     ],
 }
 
+include_files = [("cfssl.yml.dist", "cfssl.yml")]
+
 setup(
     name='cfssl-cli',
     version='0.0.1',
     author='Rémi Alvergnat',
     author_email='toilal.dev@gmail.com',
     description='This CLI tool allows you to interact with a remote CFSSL server.',
-    options={"build_exe": {"packages": ["multiprocessing", "idna", "_cffi_backend", "pkg_resources._vendor"]}},
+    options={"build_exe": {"packages": ["multiprocessing", "idna", "_cffi_backend", "pkg_resources._vendor"], "include_files": include_files}},
     executables=[Executable("cfsslcli/__main__.py", targetName="cfssl.exe")],
     packages=find_packages(),
     install_requires=install_requires,
