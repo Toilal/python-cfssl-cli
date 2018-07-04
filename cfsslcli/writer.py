@@ -7,11 +7,17 @@ from cfsslcli.checksums import validate_checksum
 from cfsslcli.crypto import convert_pem_to_der
 
 import logging
+import os
 
 log = logging.getLogger(__name__)
 
+def _write_file(path, binary):
+    log.info('Writing file: %s' % path)
+    with open(path, 'wb') as stream:
+        stream.write(binary)
 
-def write_files(response, output, der):
+
+def write_files(response, output, der, conf = {}):
     """
     Write files contained in response.
 
@@ -21,37 +27,46 @@ def write_files(response, output, der):
     """
     certificate_der = None
     certificate_request_der = None
+
+    should_verify_certificate_der = True
+
+    filenames = conf.get('filenames', {})
+
     if 'private_key' in response:
-        _write_file('%s.key.pem' % output, response['private_key'].encode('ascii'))
+        private_key = response['private_key'].encode('ascii')
+        _write_file(filenames.get('private_key', '%s.key.pem') % output, private_key)
     if 'certificate' in response:
-        certificate_der = convert_pem_to_der('certificate', response['certificate'].encode('ascii'))
+        certificate = response['certificate'].encode('ascii')
+        certificate_der = convert_pem_to_der('certificate', certificate)
         validate_checksum('certificate', certificate_der, response['sums']['certificate'], True)
-        _write_file('%s.pem' % output, response['certificate'].encode('ascii'))
+
+        if 'chain' in conf and os.path.exists(conf['chain']):
+            with open(conf['chain'], 'rb') as stream:
+                certificate = stream.read() + certificate
+            certificate_der = convert_pem_to_der('certificate', certificate)
+            should_verify_certificate_der = False
+
+        _write_file(filenames.get('certificate', '%s.pem') % output, certificate)
     if 'certificate_request' in response:
         certificate_request_der = convert_pem_to_der('certificate_request', response['certificate_request'].encode('ascii'))
         validate_checksum('certificate_request', certificate_request_der, response['sums']['certificate_request'], True)
-        _write_file('%s.csr.pem' % output, response['certificate_request'].encode('ascii'))
+        _write_file(filenames.get('certificate_request', '%s.csr.pem') % output, response['certificate_request'].encode('ascii'))
 
     if der:
         if 'certificate' in response:
-            _write_file('%s.der' % output, certificate_der)
-            with open('%s.der' % output, 'rb') as der_file:
-                content = der_file.read()
-                validate_checksum('certificate', content, response['sums']['certificate'], True)
+            _write_file(filenames.get('certificate_der', '%s.der') % output, certificate_der)
+            if should_verify_certificate_der:
+                with open(filenames.get('certificate_der', '%s.der') % output, 'rb') as der_file:
+                    content = der_file.read()
+                    validate_checksum('certificate', content, response['sums']['certificate'], True)
         if 'certificate_request' in response:
-            _write_file('%s.csr.der' % output, certificate_request_der)
-            with open('%s.csr.der' % output, 'rb') as der_file:
+            _write_file(filenames.get('certificate_request_der', '%s.csr.der') % output, certificate_request_der)
+            with open(filenames.get('certificate_request_der', '%s.csr.der') % output, 'rb') as der_file:
                 content = der_file.read()
                 validate_checksum('certificate_request', content, response['sums']['certificate_request'], True)
 
 
-def _write_file(path, binary):
-    log.info('Writing file: %s' % path)
-    with open(path, 'wb') as stream:
-        stream.write(binary)
-
-
-def write_stdout(response, der):
+def write_stdout(response, der, conf = {}):
     if 'private_key' in response:
         print(response['private_key'])
     if 'certificate' in response:

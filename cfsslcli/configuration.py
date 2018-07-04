@@ -37,7 +37,7 @@ def new_certificate_request(configuration, common_name=None, hosts=None):
     """
     certificate_request = cfssl.CertificateRequest()
 
-    _load_configuration_property(certificate_request, configuration['defaults']['certificate_request'], 'common_name', common_name)
-    _load_configuration_property(certificate_request, configuration['defaults']['certificate_request'], 'hosts', hosts)
+    _load_configuration_property(certificate_request, configuration, 'common_name', common_name)
+    _load_configuration_property(certificate_request, configuration, 'hosts', hosts)
 
     return certificate_request

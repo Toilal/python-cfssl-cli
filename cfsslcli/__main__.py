@@ -28,7 +28,7 @@ def gencert(common_name, host, config, output, stdout, der):
     conf = configuration.load(config)
     client = cfssl.CFSSL(**conf['cfssl'])
 
-    request = configuration.new_certificate_request(conf)
+    request = configuration.new_certificate_request(conf.get('certificate_request', {}))
     if common_name:
         request.common_name = common_name
     if host:
@@ -39,9 +39,9 @@ def gencert(common_name, host, config, output, stdout, der):
     checksums.validate_checksums(response)
 
     if output:
-        writer.write_files(response, output, der)
+        writer.write_files(response, output, der, conf.get('writer', {}))
     if not output or stdout:
-        writer.write_stdout(response, der)
+        writer.write_stdout(response, der, conf.get('writer', {}))
 
 
 def main():
