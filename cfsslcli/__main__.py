@@ -17,16 +17,35 @@ def greet():
     pass
 
 
-@greet.command(help='Generate a private/public key pair certificate')
+@greet.command(help='Generate certificate files')
+@click.argument('domain', required=False)
 @click.option('-n', '--common-name', help='The fully qualified domain name of the certificate')
 @click.option('-h', '--host', multiple=True, help='Add hosts to the certificate')
 @click.option('-c', '--config', default="cfssl.yml", help='Path to configuration file')
 @click.option('-d', '--der', is_flag=True, help='Generates DER files')
+@click.option('-r', '--csr', is_flag=True, help='Generates Certificate Request files')
 @click.option('-s', '--stdout', is_flag=True, help='Display certificates on screen')
-@click.option('-o', '--output', default="output", help='Write output to files of given base name')
-def gencert(common_name, host, config, output, stdout, der):
+@click.option('-o', '--output', default=None, help='Write output to files of given base name')
+def gencert(common_name, host, config, der, csr,  output, stdout, domain):
     conf = configuration.load(config)
     client = cfssl.CFSSL(**conf['cfssl'])
+
+    if domain:
+        common_name = domain if not common_name else common_name
+        host = host + (domain, "*.%s" % domain)
+        output = domain if not output else output
+
+    if not output:
+        output = common_name
+
+    if not output:
+        output = 'output'
+
+    if not common_name:
+        raise click.exceptions.ClickException("At least [domain] argument or [--common-name] option should be defined.")
+
+    if not host:
+        host = host + (common_name,)
 
     request = configuration.new_certificate_request(conf.get('certificate_request', {}))
     if common_name:
@@ -39,9 +58,9 @@ def gencert(common_name, host, config, output, stdout, der):
     checksums.validate_checksums(response)
 
     if output:
-        writer.write_files(response, output, der, conf.get('writer', {}))
+        writer.write_files(response, output, der, csr, conf.get('writer', {}))
     if not output or stdout:
-        writer.write_stdout(response, der, conf.get('writer', {}))
+        writer.write_stdout(response, der, csr, conf.get('writer', {}))
 
 
 def main():

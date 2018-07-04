@@ -17,7 +17,7 @@ def _write_file(path, binary):
         stream.write(binary)
 
 
-def write_files(response, output, der, conf = {}):
+def write_files(response, output, der, csr, conf = {}):
     """
     Write files contained in response.
 
@@ -47,7 +47,7 @@ def write_files(response, output, der, conf = {}):
             should_verify_certificate_der = False
 
         _write_file(filenames.get('certificate', '%s.pem') % output, certificate)
-    if 'certificate_request' in response:
+    if csr and 'certificate_request' in response:
         certificate_request_der = convert_pem_to_der('certificate_request', response['certificate_request'].encode('ascii'))
         validate_checksum('certificate_request', certificate_request_der, response['sums']['certificate_request'], True)
         _write_file(filenames.get('certificate_request', '%s.csr.pem') % output, response['certificate_request'].encode('ascii'))
@@ -59,7 +59,7 @@ def write_files(response, output, der, conf = {}):
                 with open(filenames.get('certificate_der', '%s.der') % output, 'rb') as der_file:
                     content = der_file.read()
                     validate_checksum('certificate', content, response['sums']['certificate'], True)
-        if 'certificate_request' in response:
+        if csr and 'certificate_request' in response:
             _write_file(filenames.get('certificate_request_der', '%s.csr.der') % output, certificate_request_der)
             with open(filenames.get('certificate_request_der', '%s.csr.der') % output, 'rb') as der_file:
                 content = der_file.read()
