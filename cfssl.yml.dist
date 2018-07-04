@@ -1,15 +1,15 @@
 cfssl:
-  host: 192.168.1.100
+  host: localhost
   port: 8080
   ssl: False
   verify_cert: False
 certificate_request: # Certificate Request configuration
   names: # Subject Informations to be added to the request.
-    - org_name: GFI Informatique Orléans # The full legal name of the organization. Do not abbreviate.
+    - org_name: ~ # The full legal name of the organization. Do not abbreviate.
       org_unit: ~ # Section of the organization.
-      city: Orléans # The city where the organization is legally located.
+      city: ~ # The city where the organization is legally located.
       state: ~ # The state or province where your organization is legally located. Can not be abbreviated.
-      country: FR # The two letter ISO abbreviation for the country.
+      country: ~ # The two letter ISO abbreviation for the country.
 writer:
   chain: ./chain.pem # Chain file to prepend to generated certificates
   filenames:
