@@ -3,6 +3,7 @@
 
 import yaml
 import cfssl
+import os
 
 
 def load(configuration):
@@ -12,8 +13,11 @@ def load(configuration):
     :param configuration:
     :return:
     """
-    with open(configuration, 'r') as stream:
-        return yaml.load(stream)
+    if configuration and os.path.exists(configuration):
+        with open(configuration, 'r') as stream:
+            return yaml.load(stream)
+    else:
+        raise FileNotFoundError('Can\'t find configuration file: %s' % configuration)
 
 
 def _load_configuration_property(certificate_request, configuration, key, value):
