@@ -42,7 +42,7 @@ def write_files(response, output, der, csr, conf = {}):
 
         if 'chain' in conf and os.path.exists(conf['chain']):
             with open(conf['chain'], 'rb') as stream:
-                certificate = stream.read() + certificate
+                certificate += stream.read()
             certificate_der = convert_pem_to_der('certificate', certificate)
             should_verify_certificate_der = False
 
