@@ -1,8 +1,8 @@
 cfssl:
-  host: localhost
-  port: 8080
-  ssl: False
-  verify_cert: False
+  host: cfssl.etudes.local
+  port: 443
+  ssl: True
+  verify_cert: True
 certificate_request: # Certificate Request configuration
   names: # Subject Informations to be added to the request.
     - org_name: ~ # The full legal name of the organization. Do not abbreviate.
@@ -11,7 +11,7 @@ certificate_request: # Certificate Request configuration
       state: ~ # The state or province where your organization is legally located. Can not be abbreviated.
       country: ~ # The two letter ISO abbreviation for the country.
 writer:
-  chain: ./chain.pem # Chain file to prepend to generated certificates
+  chain: ~/.cfssl-cli/chain.pem # Chain file to prepend to generated certificates
   filenames:
     private_key: '%s.key'
     certificate: '%s.crt'

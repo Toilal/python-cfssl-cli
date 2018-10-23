@@ -4,6 +4,9 @@
 import yaml
 import cfssl
 import os
+import pkg_resources
+
+from os.path import expanduser, normpath
 
 
 def load(configuration):
@@ -13,6 +16,22 @@ def load(configuration):
     :param configuration:
     :return:
     """
+    if configuration:
+        configuration = normpath(expanduser(configuration))
+
+    if not configuration or not os.path.exists(configuration):
+        configuration = normpath(expanduser("~/.cfssl-cli/config.yml"))
+
+    if not os.path.exists(configuration):
+        default_config_content = pkg_resources.resource_string(__name__, 'config/config.yml')
+        os.makedirs(os.path.dirname(configuration), exist_ok=True)
+        with open(configuration, 'wb') as stream:
+            stream.write(default_config_content)
+        default_chain_content = pkg_resources.resource_string(__name__, 'config/chain.pem')
+        chain = normpath(expanduser("~/.cfssl-cli/chain.pem"))
+        with open(chain, 'wb') as stream:
+            stream.write(default_chain_content)
+
     if configuration and os.path.exists(configuration):
         with open(configuration, 'r') as stream:
             return yaml.load(stream)

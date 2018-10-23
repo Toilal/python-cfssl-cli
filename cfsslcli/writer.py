@@ -9,7 +9,10 @@ from cfsslcli.crypto import convert_pem_to_der
 import logging
 import os
 
+from os.path import expanduser, normpath
+
 log = logging.getLogger(__name__)
+
 
 def _write_file(path, binary):
     log.info('Writing file: %s' % path)
@@ -40,11 +43,13 @@ def write_files(response, output, der, csr, conf = {}):
         certificate_der = convert_pem_to_der('certificate', certificate)
         validate_checksum('certificate', certificate_der, response['sums']['certificate'], True)
 
-        if 'chain' in conf and os.path.exists(conf['chain']):
-            with open(conf['chain'], 'rb') as stream:
-                certificate += stream.read()
-            certificate_der = convert_pem_to_der('certificate', certificate)
-            should_verify_certificate_der = False
+        if 'chain' in conf:
+            chain = normpath(expanduser(conf['chain']))
+            if os.path.exists(chain):
+                with open(chain, 'rb') as stream:
+                    certificate += stream.read()
+                certificate_der = convert_pem_to_der('certificate', certificate)
+                should_verify_certificate_der = False
 
         _write_file(filenames.get('certificate', '%s.pem') % output, certificate)
     if csr and 'certificate_request' in response:

@@ -27,7 +27,7 @@ def greet():
 @click.argument('domain', required=False)
 @click.option('-n', '--common-name', help='The fully qualified domain name of the certificate')
 @click.option('-h', '--host', multiple=True, help='Add hosts to the certificate')
-@click.option('-c', '--config', default="cfssl.yml", help='Path to configuration file')
+@click.option('-c', '--config', help='Path to configuration file')
 @click.option('-d', '--der', is_flag=True, help='Generates DER files')
 @click.option('-r', '--csr', is_flag=True, help='Generates Certificate Request files')
 @click.option('-s', '--stdout', is_flag=True, help='Display certificates on screen')
