@@ -4,12 +4,18 @@
 from __future__ import print_function
 
 import sys
+import os
 
 import click
 import cfssl
 
 from cfsslcli import __version__, writer, checksums, configuration
 
+if 'REQUESTS_CA_BUNDLE' not in os.environ:
+    if os.environ.get('SSL_CERT_FILE'):
+        os.environ['REQUESTS_CA_BUNDLE'] = os.environ.get('SSL_CERT_FILE')
+    elif os.environ.get('NODE_EXTRA_CA_CERTS'):
+        os.environ['REQUESTS_CA_BUNDLE'] = os.environ.get('NODE_EXTRA_CA_CERTS')
 
 @click.group(context_settings=dict(help_option_names=['-h', '--help']))
 @click.version_option(prog_name='cfssl', version=__version__)
