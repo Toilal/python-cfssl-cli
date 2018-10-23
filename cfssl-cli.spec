@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['cfsslcli\\__main__.py'],
+a = Analysis(['cfsslcli/__main__.py'],
              pathex=[],
              binaries=[],
              datas=[('cfsslcli/config/config.yml', 'cfsslcli/config'), ('cfsslcli/config/chain.pem', 'cfsslcli/config')],

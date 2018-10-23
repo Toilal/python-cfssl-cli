@@ -26,7 +26,7 @@ entry_points = {
 
 setup(
     name='cfssl-cli',
-    version='1.1.0',
+    version='1.2.0',
     author='Rémi Alvergnat',
     author_email='toilal.dev@gmail.com',
     description='This CLI tool allows you to interact with a remote CFSSL server.',
