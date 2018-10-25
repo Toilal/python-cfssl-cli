@@ -28,11 +28,12 @@ def greet():
 @click.option('-n', '--common-name', help='The fully qualified domain name of the certificate')
 @click.option('-h', '--host', multiple=True, help='Add hosts to the certificate')
 @click.option('-c', '--config', help='Path to configuration file')
-@click.option('-d', '--der', is_flag=True, help='Generates DER files')
-@click.option('-r', '--csr', is_flag=True, help='Generates Certificate Request files')
+@click.option('--der', is_flag=True, help='Generates DER files')
+@click.option('--csr', is_flag=True, help='Generates Certificate Request files')
 @click.option('-s', '--stdout', is_flag=True, help='Display certificates on screen')
 @click.option('-o', '--output', default=None, help='Write output to files of given base name')
-def gencert(common_name, host, config, der, csr,  output, stdout, domain):
+@click.option('-d', '--destination', default=None, help='Write output files to given directory')
+def gencert(common_name, host, config, der, csr,  output, stdout, destination, domain):
     conf = configuration.load(config)
     client = cfssl.CFSSL(**conf['cfssl'])
 
@@ -64,9 +65,9 @@ def gencert(common_name, host, config, der, csr,  output, stdout, domain):
     checksums.validate_checksums(response)
 
     if output:
-        writer.write_files(response, output, der, csr, conf.get('writer', {}))
+        writer.write_files(response, output, der, csr, conf.get('writer'), destination)
     if not output or stdout:
-        writer.write_stdout(response, der, csr, conf.get('writer', {}))
+        writer.write_stdout(response, der, csr)
 
 
 def main():
