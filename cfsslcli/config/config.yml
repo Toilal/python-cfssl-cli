@@ -1,8 +1,8 @@
 cfssl:
-  host: cfssl.etudes.local
-  port: 443
-  ssl: True
-  verify_cert: True
+  host: localhost
+  port: 7780
+  ssl: False
+  verify_cert: False
 certificate_request: # Certificate Request configuration
   names: # Subject Informations to be added to the request.
     - org_name: ~ # The full legal name of the organization. Do not abbreviate.
