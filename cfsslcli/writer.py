@@ -55,7 +55,7 @@ def write_files(response, output, der, csr, conf=None, destination=None, append_
         certificate_der = convert_pem_to_der('certificate', certificate)
         validate_checksum('certificate', certificate_der, response['sums']['certificate'], True)
 
-        if conf.get('append_ca_certificate') and client:
+        if append_ca_certificate and client:
             info = client.info('')
 
             ca = info['certificate'] + '\n'
