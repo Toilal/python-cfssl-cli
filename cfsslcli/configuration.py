@@ -7,6 +7,7 @@ from os.path import expanduser, expandvars, normpath, join, dirname, exists
 import cfssl
 import pkg_resources
 import yaml
+from urllib.parse import urlsplit
 
 
 def load(configuration):
@@ -26,6 +27,19 @@ def load(configuration):
             loaded['__configuration__'] = configuration
             if 'writer' in loaded:
                 loaded['writer']['__configuration__'] = configuration
+            if os.environ.get('CFSSL_URL'):
+                parsed = urlsplit(os.environ.get('CFSSL_URL'))
+                loaded['cfssl']['ssl'] = parsed.scheme.lower() == 'https'
+                loaded['cfssl']['verify_cert'] = parsed.scheme.lower() == 'https'
+                loaded['cfssl']['host'] = parsed.hostname
+                try:
+                    loaded['cfssl']['port'] = parsed.port
+                except ValueError:
+                    pass
+            if os.environ.get('CFSSL_VERIFY_CERT'):
+                loaded['cfssl']['verify_cert'] = True
+            if os.environ.get('CFSSL_NO_VERIFY_CERT'):
+                loaded['cfssl']['verify_cert'] = False
             return loaded
     else:
         raise FileNotFoundError('Can\'t find configuration file: %s' % configuration)
