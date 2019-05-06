@@ -26,6 +26,7 @@ def greet():
 
 @greet.command(help='Generate certificate files')
 @click.argument('domain', required=False)
+@click.option('-u', '--url', help='URL of the CFSSL server')
 @click.option('-n', '--common-name', help='The fully qualified domain name of the certificate')
 @click.option('-h', '--host', multiple=True, help='Add hosts to the certificate')
 @click.option('-c', '--config', help='Path to configuration file')
@@ -34,8 +35,8 @@ def greet():
 @click.option('-s', '--stdout', is_flag=True, help='Display certificates on screen')
 @click.option('-o', '--output', default=None, help='Write output to files of given base name')
 @click.option('-d', '--destination', default=None, help='Write output files to given directory')
-def gencert(common_name, host, config, der, csr, output, stdout, destination, domain):
-    conf = configuration.load(config)
+def gencert(url, common_name, host, config, der, csr, output, stdout, destination, domain):
+    conf = configuration.load(config, url)
     client = cfssl.CFSSL(**conf['cfssl'])
 
     if domain:

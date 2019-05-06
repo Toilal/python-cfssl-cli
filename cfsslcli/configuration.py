@@ -10,7 +10,7 @@ import yaml
 from urllib.parse import urlsplit
 
 
-def load(configuration):
+def load(configuration, url=None):
     """
     Load the configuration
 
@@ -27,8 +27,10 @@ def load(configuration):
             loaded['__configuration__'] = configuration
             if 'writer' in loaded:
                 loaded['writer']['__configuration__'] = configuration
-            if os.environ.get('CFSSL_URL'):
-                parsed = urlsplit(os.environ.get('CFSSL_URL'))
+            if url is None:
+                url = os.environ.get('CFSSL_URL')
+            if url:
+                parsed = urlsplit(url)
                 loaded['cfssl']['ssl'] = parsed.scheme.lower() == 'https'
                 loaded['cfssl']['verify_cert'] = parsed.scheme.lower() == 'https'
                 loaded['cfssl']['host'] = parsed.hostname
