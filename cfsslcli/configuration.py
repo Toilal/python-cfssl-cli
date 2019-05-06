@@ -56,17 +56,6 @@ def find_configuration(configuration):
     return configuration
 
 
-def find_writer_chain(configuration, chain):
-    chain = normpath(expandvars(expanduser(chain)))
-    dirs = dirname(configuration)
-    if configuration and dirs:
-        try:
-            chain = join(dirs, chain)
-        except ValueError:
-            pass
-    return chain
-
-
 def write_default_configuration(configuration):
     default_config_content = pkg_resources.resource_string(__name__, 'config/config.yml')
     dirs = dirname(configuration)
@@ -74,16 +63,6 @@ def write_default_configuration(configuration):
         os.makedirs(dirs, exist_ok=True)
     with open(configuration, 'wb') as stream:
         stream.write(default_config_content)
-    default_config_yaml = yaml.load(default_config_content)
-    if 'writer' in default_config_yaml and default_config_yaml['writer'].get('chain'):
-        write_default_writer_chain(configuration, default_config_yaml['writer'].get('chain'))
-
-
-def write_default_writer_chain(configuration, chain):
-    default_chain_content = pkg_resources.resource_string(__name__, 'config/chain.pem')
-    chain = find_writer_chain(configuration, chain)
-    with open(chain, 'wb') as stream:
-        stream.write(default_chain_content)
 
 
 def _load_configuration_property(certificate_request, configuration, key, value):

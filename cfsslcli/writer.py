@@ -7,7 +7,7 @@ import logging
 from os.path import normpath, expanduser, expandvars, join
 
 from cfsslcli.checksums import validate_checksum
-from cfsslcli.configuration import find_configuration, find_writer_chain
+from cfsslcli.configuration import find_configuration
 from cfsslcli.crypto import convert_pem_to_der
 
 log = logging.getLogger(__name__)
@@ -21,17 +21,19 @@ def _write_file(path, binary, destination=None):
         stream.write(binary)
 
 
-def write_files(response, output, der, csr, conf=None, destination=None):
+def write_files(response, output, der, csr, conf=None, destination=None, append_ca_certificate=False, client=None):
     """
     Write files contained in response.
 
     :param response:
     :param output:
     :type output: str
-    :param der: 
-    :param csr: 
+    :param der:
+    :param csr:
     :param conf:
+    :param append_ca_certificate:
     :param destination:
+    :param client:
     """
     if not conf:
         conf = {}
@@ -53,11 +55,12 @@ def write_files(response, output, der, csr, conf=None, destination=None):
         certificate_der = convert_pem_to_der('certificate', certificate)
         validate_checksum('certificate', certificate_der, response['sums']['certificate'], True)
 
-        if 'chain' in conf:
-            configuration = find_configuration(conf['__configuration__'])
-            chain = find_writer_chain(configuration, conf['chain'])
-            with open(chain, 'rb') as stream:
-                certificate += stream.read()
+        if conf.get('append_ca_certificate') and client:
+            info = client.info('')
+
+            ca = info['certificate'] + '\n'
+
+            certificate += ca.encode('ascii')
             certificate_der = convert_pem_to_der('certificate', certificate)
             should_verify_certificate_der = False
 
@@ -85,16 +88,23 @@ def write_files(response, output, der, csr, conf=None, destination=None):
                 validate_checksum('certificate_request', content, response['sums']['certificate_request'], True)
 
 
-def write_stdout(response, der):
+def write_stdout(response, der, csr, append_ca_certificate, client=None):
     if 'private_key' in response:
         print(response['private_key'])
     if 'certificate' in response:
         print(response['certificate'])
+
+        if append_ca_certificate and client:
+            info = client.info('')
+            ca = info['certificate'] + '\n'
+            print(ca)
+
     if 'certificate_request' in response:
         print(response['certificate_request'])
 
     if der:
         if 'certificate' in response:
             print(convert_pem_to_der('certificate', response['certificate']))
-        if 'certificate_request' in response:
+        if csr and 'certificate_request' in response:
             print(convert_pem_to_der('certificate_request', response['certificate_request']))
+

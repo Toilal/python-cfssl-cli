@@ -10,8 +10,8 @@ certificate_request: # Certificate Request configuration
       city: ~ # The city where the organization is legally located.
       state: ~ # The state or province where your organization is legally located. Can not be abbreviated.
       country: ~ # The two letter ISO abbreviation for the country.
+append_ca_certificate: True # Append CA certificate to the generated
 writer:
-  chain: chain.pem # Chain file to prepend to generated certificates (absolute path, or relative path from config.yml)
   filenames:
     private_key: '%s.key'
     certificate: '%s.crt'

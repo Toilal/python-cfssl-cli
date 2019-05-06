@@ -3,11 +3,11 @@
 
 from __future__ import print_function
 
-import sys
 import os
+import sys
 
-import click
 import cfssl
+import click
 
 from cfsslcli import __version__, writer, checksums, configuration
 
@@ -16,6 +16,7 @@ if 'REQUESTS_CA_BUNDLE' not in os.environ:
         os.environ['REQUESTS_CA_BUNDLE'] = os.environ.get('SSL_CERT_FILE')
     elif os.environ.get('NODE_EXTRA_CA_CERTS'):
         os.environ['REQUESTS_CA_BUNDLE'] = os.environ.get('NODE_EXTRA_CA_CERTS')
+
 
 @click.group(context_settings=dict(help_option_names=['-h', '--help']))
 @click.version_option(prog_name='cfssl', version=__version__)
@@ -33,7 +34,7 @@ def greet():
 @click.option('-s', '--stdout', is_flag=True, help='Display certificates on screen')
 @click.option('-o', '--output', default=None, help='Write output to files of given base name')
 @click.option('-d', '--destination', default=None, help='Write output files to given directory')
-def gencert(common_name, host, config, der, csr,  output, stdout, destination, domain):
+def gencert(common_name, host, config, der, csr, output, stdout, destination, domain):
     conf = configuration.load(config)
     client = cfssl.CFSSL(**conf['cfssl'])
 
@@ -65,9 +66,11 @@ def gencert(common_name, host, config, der, csr,  output, stdout, destination, d
     checksums.validate_checksums(response)
 
     if output:
-        writer.write_files(response, output, der, csr, conf.get('writer'), destination)
+        writer.write_files(response, output, der, csr, conf.get('writer'), destination,
+                           conf.get('append_ca_certificate'), client)
     if not output or stdout:
-        writer.write_stdout(response, der, csr)
+        writer.write_stdout(response, der, csr,
+                            conf.get('append_ca_certificate'), client)
 
 
 def main():
