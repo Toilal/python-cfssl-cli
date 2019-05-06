@@ -73,7 +73,7 @@ def _load_configuration_property(certificate_request, configuration, key, value)
             pass
 
     if value:
-        setattr(certificate_request, 'common_name', value)
+        setattr(certificate_request, key, value)
 
 
 def new_certificate_request(configuration, common_name=None, hosts=None):
