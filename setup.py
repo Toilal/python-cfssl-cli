@@ -16,7 +16,7 @@ with open('requirements.txt', 'r') as f:
     install_requires = f.read().splitlines()
 
 with open('dev-requirements.txt', 'r') as f:
-    tests_require = f.read().splitlines()
+    dev_requires = f.read().splitlines()
 
 entry_points = {
     'console_scripts': [
@@ -36,13 +36,17 @@ setup(
     keywords="cfssl ssl certificate certificates cli",
     packages=find_packages(),
     install_requires=install_requires,
-    tests_require=tests_require,
+    tests_require=dev_requires,
     entry_points=entry_points,
     long_description=long_description,
     url='https://toilal.github.io/python-cfssl-cli',
     download_url='https://github.com/Toilal/python-cfssl-cli',
     license='MIT',
     zip_safe=True,
+    extras_require={
+        'dev': dev_requires,
+        'test': dev_requires,
+    },
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
