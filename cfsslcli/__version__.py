@@ -3,4 +3,4 @@
 """
 Version module
 """
-__version__ = '1.3.1.dev0'
+__version__ = '1.3.1'
