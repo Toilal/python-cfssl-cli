@@ -34,7 +34,7 @@ def load(configuration, url=None):
 
     if configuration and exists(configuration):
         with open(configuration, 'r') as stream:
-            loaded = yaml.load(stream)
+            loaded = yaml.load(stream, Loader=yaml.FullLoader)
             loaded['__configuration__'] = configuration
             if 'writer' in loaded:
                 loaded['writer']['__configuration__'] = configuration
