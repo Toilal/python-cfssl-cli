@@ -33,3 +33,7 @@ Installation
 ============
 
 * Install Python package ``pip install cfssl-cli``
+
+*or*
+
+* Download binary file for your platform at `Github Releases page <https://github.com/Toilal/python-cfssl-cli/releases>`_.
