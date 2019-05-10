@@ -3,6 +3,7 @@ __pycache__/
 *$py.class
 .eggs
 *.egg-info
+.tox/
 /*.der
 /*.pem
 /*.crt

@@ -5,10 +5,12 @@ python:
   - 3.4
   - 3.5
   - 3.6
-  - pypy-5.4.1
+  - 3.7
+  - pypy-7.1.1
 install:
   - pip install pip --upgrade
   - pip install .
 script:
+  - pylint cfsslcli
   - python setup.py test
   - python setup.py build

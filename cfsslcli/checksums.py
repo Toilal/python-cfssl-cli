@@ -1,11 +1,15 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-import logging
-log = logging.getLogger(__name__)
+"""
+Checksums module
+"""
 
 import hashlib
+import logging
+
 from .crypto import convert_pem_to_der
+
+log = logging.getLogger(__name__)
 
 
 def validate_checksums(response):
@@ -17,10 +21,10 @@ def validate_checksums(response):
     """
     sums = response.get('sums', {})
     for part, content in response.items():
-        if part != 'sums' and part != 'private_key':
+        if part not in ('sums', 'private_key'):
             sums_item = sums.get(part)
             if not sums_item:
-                log.warning('No checksum data for %s' % part)
+                log.warning('No checksum data for %s', part)
             else:
                 validate_checksum(part, content.encode('ascii'), sums_item)
 
@@ -56,6 +60,5 @@ def validate_checksum_algo(part, content, algo, checksum, content_is_der=False):
     validated_checksum = getattr(hashlib, algo.replace('-', ''))(content).hexdigest()
     checksum = checksum.lower()
     if validated_checksum != checksum:
-        raise IOError("Invalid %s %s checksum (%s): %s != %s ", part, algo, checksum, validated_checksum)
-    else:
-        log.debug("Checksum validated: %s (%s)" % (part, algo))
+        raise IOError("Invalid %s checksum (%s): %s != %s " % (part, algo, checksum, validated_checksum))
+    log.debug("Checksum validated: %s (%s)", part, algo)

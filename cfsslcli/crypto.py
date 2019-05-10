@@ -1,13 +1,18 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+Crypto module
+"""
 
 from cryptography import x509
-from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import serialization
 
 
 class CryptoException(Exception):
-    pass
+    """
+    Exception raised when something wrong occurs in cryto module.
+    """
 
 
 def convert_pem_to_der(part, content):
@@ -24,7 +29,7 @@ def convert_pem_to_der(part, content):
     if part == 'certificate':
         cert = x509.load_pem_x509_certificate(content, default_backend())
         return cert.public_bytes(serialization.Encoding.DER)
-    elif part == 'certificate_request':
+    if part == 'certificate_request':
         csr = x509.load_pem_x509_csr(content, default_backend())
         return csr.public_bytes(serialization.Encoding.DER)
     raise CryptoException('Unknown object type: %s' % part)

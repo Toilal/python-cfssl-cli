@@ -1,13 +1,24 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+Configuration module
+"""
 
 import os
 from os.path import expanduser, expandvars, normpath, join, dirname, exists
+try:
+    from urllib.parse import urlsplit
+except ImportError:
+    from urlparse import urlsplit
 
 import cfssl
 import pkg_resources
 import yaml
-from urllib.parse import urlsplit
+
+try:
+    FileNotFoundError
+except NameError:
+    FileNotFoundError = IOError  # pylint: disable=redefined-builtin
 
 
 def load(configuration, url=None):
@@ -52,7 +63,6 @@ def find_configuration(configuration):
     Find the configuration filepath.
 
     :param configuration:
-    :param write_default_if_not_exists: 
     :return:
     """
     if configuration:
@@ -73,10 +83,15 @@ def find_configuration(configuration):
 
 
 def write_default_configuration(configuration):
+    """
+    Write default configuration file.
+    :param configuration:
+    :return:
+    """
     default_config_content = pkg_resources.resource_string(__name__, 'config/config.yml')
     dirs = dirname(configuration)
-    if dirs:
-        os.makedirs(dirs, exist_ok=True)
+    if dirs and not os.path.exists(dirs):
+        os.makedirs(dirs)
     with open(configuration, 'wb') as stream:
         stream.write(default_config_content)
 

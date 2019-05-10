@@ -1,15 +1,18 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+Main module
+"""
 
 from __future__ import print_function
 
 import os
-import sys
 
 import cfssl
 import click
 
-from cfsslcli import __version__, writer, checksums, configuration
+from cfsslcli import writer, checksums, configuration
+from cfsslcli.__version__ import __version__
 
 if 'REQUESTS_CA_BUNDLE' not in os.environ:
     if os.environ.get('SSL_CERT_FILE'):
@@ -19,12 +22,15 @@ if 'REQUESTS_CA_BUNDLE' not in os.environ:
 
 
 @click.group(context_settings=dict(help_option_names=['-h', '--help']))
-@click.version_option(prog_name='cfssl', version=__version__)
-def greet():
-    pass
+@click.version_option(prog_name='cfssl-cli', version=__version__)
+def main():
+    """
+    Main command group
+    :return:
+    """
 
 
-@greet.command(help='Generate certificate files')
+@main.command(help='Generate certificate files')
 @click.argument('domain', required=False)
 @click.option('-u', '--url', help='URL of the CFSSL server')
 @click.option('-n', '--common-name', help='The fully qualified domain name of the certificate')
@@ -36,6 +42,20 @@ def greet():
 @click.option('-o', '--output', default=None, help='Write output to files of given base name')
 @click.option('-d', '--destination', default=None, help='Write output files to given directory')
 def gencert(url, common_name, host, config, der, csr, output, stdout, destination, domain):
+    """
+    Generate a new certificate.
+    :param url:
+    :param common_name:
+    :param host:
+    :param config:
+    :param der:
+    :param csr:
+    :param output:
+    :param stdout:
+    :param destination:
+    :param domain:
+    :return:
+    """
     conf = configuration.load(config, url)
     client = cfssl.CFSSL(**conf['cfssl'])
 
@@ -72,10 +92,6 @@ def gencert(url, common_name, host, config, der, csr, output, stdout, destinatio
     if not output or stdout:
         writer.write_stdout(response, der, csr,
                             conf.get('append_ca_certificate'), client)
-
-
-def main():
-    greet(sys.argv[1:])
 
 
 if __name__ == '__main__':

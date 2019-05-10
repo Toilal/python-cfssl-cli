@@ -1,1 +1,4 @@
+zest.releaser[recommended]
 pytest
+pylint
+tox

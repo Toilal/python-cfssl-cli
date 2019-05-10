@@ -1,5 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+Writer module
+"""
 
 from __future__ import print_function
 
@@ -7,7 +10,6 @@ import logging
 from os.path import normpath, expanduser, expandvars, join
 
 from cfsslcli.checksums import validate_checksum
-from cfsslcli.configuration import find_configuration
 from cfsslcli.crypto import convert_pem_to_der
 
 log = logging.getLogger(__name__)
@@ -16,7 +18,7 @@ log = logging.getLogger(__name__)
 def _write_file(path, binary, destination=None):
     if destination:
         path = join(normpath(expandvars(expanduser(destination))), path)
-    log.info('Writing file: %s' % path)
+    log.info('Writing file: %s', path)
     with open(path, 'wb') as stream:
         stream.write(binary)
 
@@ -71,7 +73,7 @@ def write_files(response, output, der, csr, conf=None, destination=None, append_
         validate_checksum('certificate_request', certificate_request_der, response['sums']['certificate_request'], True)
         _write_file(filenames.get('certificate_request', '%s.csr.pem') % output,
                     response['certificate_request'].encode('ascii'),
-                    destination=destination),
+                    destination=destination)
 
     if der:
         if 'certificate' in response:
@@ -81,7 +83,7 @@ def write_files(response, output, der, csr, conf=None, destination=None, append_
                     content = der_file.read()
                     validate_checksum('certificate', content, response['sums']['certificate'], True)
         if csr and 'certificate_request' in response:
-            _write_file(filenames.get('certificate_request_der', '%s.csr.der') % output, certificate_request_der, 
+            _write_file(filenames.get('certificate_request_der', '%s.csr.der') % output, certificate_request_der,
                         destination=destination)
             with open(filenames.get('certificate_request_der', '%s.csr.der') % output, 'rb') as der_file:
                 content = der_file.read()
@@ -89,6 +91,16 @@ def write_files(response, output, der, csr, conf=None, destination=None, append_
 
 
 def write_stdout(response, der, csr, append_ca_certificate, client=None):
+    """
+    Writes certificates to stdout.
+
+    :param response:
+    :param der:
+    :param csr:
+    :param append_ca_certificate:
+    :param client:
+    :return:
+    """
     if 'private_key' in response:
         print(response['private_key'])
     if 'certificate' in response:
@@ -107,4 +119,3 @@ def write_stdout(response, der, csr, append_ca_certificate, client=None):
             print(convert_pem_to_der('certificate', response['certificate']))
         if csr and 'certificate_request' in response:
             print(convert_pem_to_der('certificate_request', response['certificate_request']))
-

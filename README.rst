@@ -1,9 +1,9 @@
-.. image:: http://img.shields.io/pypi/v/python-cfssl-cli.svg
-  :target: https://pypi.python.org/pypi/python-cfssl-cli
+.. image:: http://img.shields.io/pypi/v/cfssl-cli.svg
+  :target: https://pypi.python.org/pypi/cfssl-cli
   :alt: Latest Version
 
 .. image:: http://img.shields.io/badge/license-MIT-blue.svg
-  :target: https://pypi.python.org/pypi/python-cfssl-cli
+  :target: https://pypi.python.org/pypi/cfssl-cli
   :alt: MIT License
 
 .. image:: http://img.shields.io/travis/Toilal/python-cfssl-cli.svg
@@ -13,7 +13,7 @@
 Python CFSSL CLI
 ================
 
-This CLI tool allows you to interact with a remote CFSSL server using Python.
+This CLI tool allows you to generate certificates from a remote CFSSL server.
 
 CFSSL is CloudFlare's open source toolkit for everything TLS/SSL. CFSSL is used by
 CloudFlare for their internal Certificate Authority infrastructure and for all of
@@ -32,4 +32,4 @@ A pre-existing CFSSL server is required to use this library.
 Installation
 ============
 
-* Install Python package ``pip install .``
+* Install Python package ``pip install cfssl-cli``
