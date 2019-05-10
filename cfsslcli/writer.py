@@ -23,7 +23,8 @@ def _write_file(path, binary, destination=None):
         stream.write(binary)
 
 
-def write_files(response, output, der, csr, conf=None, destination=None, append_ca_certificate=False, client=None):
+def write_files(response, output, der, csr, conf=None, destination=None, append_ca_certificate=False, client=None,
+                verify_checksum=True):
     """
     Write files contained in response.
 
@@ -55,7 +56,8 @@ def write_files(response, output, der, csr, conf=None, destination=None, append_
     if 'certificate' in response:
         certificate = response['certificate'].encode('ascii')
         certificate_der = convert_pem_to_der('certificate', certificate)
-        validate_checksum('certificate', certificate_der, response['sums']['certificate'], True)
+        if verify_checksum:
+            validate_checksum('certificate', certificate_der, response['sums']['certificate'], True)
 
         if append_ca_certificate and client:
             info = client.info('')
@@ -70,7 +72,9 @@ def write_files(response, output, der, csr, conf=None, destination=None, append_
     if csr and 'certificate_request' in response:
         certificate_request_der = convert_pem_to_der('certificate_request',
                                                      response['certificate_request'].encode('ascii'))
-        validate_checksum('certificate_request', certificate_request_der, response['sums']['certificate_request'], True)
+        if verify_checksum:
+            validate_checksum('certificate_request', certificate_request_der,
+                              response['sums']['certificate_request'], True)
         _write_file(filenames.get('certificate_request', '%s.csr.pem') % output,
                     response['certificate_request'].encode('ascii'),
                     destination=destination)
@@ -78,16 +82,17 @@ def write_files(response, output, der, csr, conf=None, destination=None, append_
     if der:
         if 'certificate' in response:
             _write_file(filenames.get('certificate_der', '%s.der') % output, certificate_der, destination=destination)
-            if should_verify_certificate_der:
+            if verify_checksum and should_verify_certificate_der:
                 with open(filenames.get('certificate_der', '%s.der') % output, 'rb') as der_file:
                     content = der_file.read()
                     validate_checksum('certificate', content, response['sums']['certificate'], True)
         if csr and 'certificate_request' in response:
             _write_file(filenames.get('certificate_request_der', '%s.csr.der') % output, certificate_request_der,
                         destination=destination)
-            with open(filenames.get('certificate_request_der', '%s.csr.der') % output, 'rb') as der_file:
-                content = der_file.read()
-                validate_checksum('certificate_request', content, response['sums']['certificate_request'], True)
+            if verify_checksum:
+                with open(filenames.get('certificate_request_der', '%s.csr.der') % output, 'rb') as der_file:
+                    content = der_file.read()
+                    validate_checksum('certificate_request', content, response['sums']['certificate_request'], True)
 
 
 def write_stdout(response, der, csr, append_ca_certificate, client=None):

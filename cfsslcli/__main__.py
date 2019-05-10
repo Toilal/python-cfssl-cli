@@ -94,5 +94,34 @@ def gencert(url, common_name, host, config, der, csr, output, stdout, destinatio
                             conf.get('append_ca_certificate'), client)
 
 
+@main.command(help='Get CA public certificate')
+@click.option('-u', '--url', help='URL of the CFSSL server')
+@click.option('-c', '--config', help='Path to configuration file')
+@click.option('-s', '--stdout', is_flag=True, help='Display certificates on screen')
+@click.option('-o', '--output', default=None, help='Write output to files of given base name')
+@click.option('-d', '--destination', default=None, help='Write output files to given directory')
+def info(url, config, output, stdout, destination):
+    """
+    Get CA public certificate
+    :param url:
+    :param config:
+    :param output:
+    :param stdout:
+    :param destination:
+    :return:
+    """
+    conf = configuration.load(config, url)
+    client = cfssl.CFSSL(**conf['cfssl'])
+
+    response = client.info('')
+
+    if output:
+        writer.write_files(response, output, None, None, conf.get('writer'), destination,
+                           False, client, False)
+    if not output or stdout:
+        writer.write_stdout(response, None, None,
+                            False, client)
+
+
 if __name__ == '__main__':
     main()
