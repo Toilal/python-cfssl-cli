@@ -5,7 +5,7 @@ from os import path
 
 from setuptools import find_packages, setup
 
-README_FILE = 'README.rst'
+README_FILE = 'README.md'
 
 long_description = None
 if path.exists(README_FILE):
@@ -39,6 +39,7 @@ setup(
     tests_require=dev_requires,
     entry_points=entry_points,
     long_description=long_description,
+    long_description_content_type="text/markdown",
     url='https://toilal.github.io/python-cfssl-cli',
     download_url='https://github.com/Toilal/python-cfssl-cli',
     license='MIT',
