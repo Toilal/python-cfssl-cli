@@ -9,6 +9,7 @@ pyinstaller = "*"
 zest-releaser = {extras = ["recommended"],version = "*"}
 pylint = "*"
 tox = "*"
+githubrelease = "*"
 
 [packages]
 click = "*"
