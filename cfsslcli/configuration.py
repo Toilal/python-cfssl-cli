@@ -6,6 +6,7 @@ Configuration module
 
 import os
 from os.path import expanduser, expandvars, normpath, join, dirname, exists
+
 try:
     from urllib.parse import urlsplit
 except ImportError:
@@ -42,6 +43,9 @@ def load(configuration, url=None):
                 url = os.environ.get('CFSSL_URL')
             if url:
                 parsed = urlsplit(url)
+                if parsed.scheme.lower() not in ('https', 'http'):
+                    raise ValueError(f"CFSSL_URL environment variable (${url}) "
+                                     f"should starts with 'http://' or 'https://'")
                 loaded['cfssl']['ssl'] = parsed.scheme.lower() == 'https'
                 loaded['cfssl']['verify_cert'] = parsed.scheme.lower() == 'https'
                 loaded['cfssl']['host'] = parsed.hostname
@@ -49,6 +53,8 @@ def load(configuration, url=None):
                     loaded['cfssl']['port'] = parsed.port
                 except ValueError:
                     pass
+                if loaded['cfssl']['port'] is None:
+                    loaded['cfssl']['port'] = 443 if parsed.scheme.lower() == 'https' else 80
             if os.environ.get('CFSSL_VERIFY_CERT'):
                 loaded['cfssl']['verify_cert'] = True
             if os.environ.get('CFSSL_NO_VERIFY_CERT'):
