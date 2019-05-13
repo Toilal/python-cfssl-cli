@@ -7,4 +7,5 @@ include *.spec
 include LICENSE
 include Pipfile
 include tox.ini
+include *.md
 recursive-include cfsslcli *.yml
