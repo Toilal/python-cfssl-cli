@@ -36,9 +36,6 @@ docker run -v "$(pwd):/src/" cdrx/pyinstaller-windows "pip install --upgrade set
 
 ## Release
 
-
-## Release
-
 ```
 pipenv shell
 
@@ -50,7 +47,7 @@ docker run -v "$(pwd):/src/" cdrx/pyinstaller-windows "pip install --upgrade set
 
 release
 
-githubrelease asset Toilal/python-cfssl-cli upload "dist/*"
+githubrelease release Toilal/python-cfssl-cli create $(python -m cfsslcli --version | cut -d ' ' -f 3-) --publish "dist/*"
 
 postrelease
 ```
