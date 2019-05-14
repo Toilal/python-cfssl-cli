@@ -44,8 +44,8 @@ def load(configuration, url=None):
             if url:
                 parsed = urlsplit(url)
                 if parsed.scheme.lower() not in ('https', 'http'):
-                    raise ValueError(f"CFSSL_URL environment variable (${url}) "
-                                     f"should starts with 'http://' or 'https://'")
+                    raise ValueError("CFSSL_URL environment variable (%s) "
+                                     "should starts with 'http://' or 'https://'" % (url,))
                 loaded['cfssl']['ssl'] = parsed.scheme.lower() == 'https'
                 loaded['cfssl']['verify_cert'] = parsed.scheme.lower() == 'https'
                 loaded['cfssl']['host'] = parsed.hostname
