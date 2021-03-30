@@ -3,10 +3,10 @@
 block_cipher = None
 
 
-a = Analysis(['cfsslcli/__main__.py'],
+a = Analysis(['cfssl_cli/__main__.py'],
              pathex=[],
              binaries=[],
-             datas=[('cfsslcli/config/config.yml', 'cfsslcli/config')],
+             datas=[('cfssl_cli/config/config.yml', 'cfssl_cli/config')],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],

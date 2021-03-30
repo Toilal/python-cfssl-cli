@@ -1,10 +1,11 @@
-[![Latest Version](http://img.shields.io/pypi/v/cfssl-cli.svg)](https://pypi.python.org/pypi/cfssl-cli)
-
-[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg)](https://pypi.python.org/pypi/cfssl-cli)
-
-[![Build Status](http://img.shields.io/travis/Toilal/python-cfssl-cli.svg)](https://travis-ci.org/Toilal/python-cfssl-cli)
-
 # Python CFSSL CLI
+
+[![Latest Version](http://img.shields.io/pypi/v/cfssl-cli.svg)](https://pypi.python.org/pypi/cfssl-cli)
+![MIT License](http://img.shields.io/badge/license-MIT-blue.svg)
+[![Build Status](https://img.shields.io/github/workflow/status/Toilal/python-cfssl-cli/ci)](https://github.com/Toilal/python-cfssl-cli/actions?query=workflow%3Aci)
+[![Codecov](https://img.shields.io/codecov/c/github/Toilal/python-cfssl-cli)](https://codecov.io/gh/Toilal/python-cfssl-cli)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/relekang/python-semantic-release)
+
 
 This CLI tool allows you to generate certificates from a remote CFSSL server.
 

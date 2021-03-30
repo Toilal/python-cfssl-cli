@@ -11,8 +11,8 @@ import os
 import cfssl
 import click
 
-from cfsslcli import writer, checksums, configuration
-from cfsslcli.__version__ import __version__
+from cfssl_cli import writer, checksums, configuration
+from cfssl_cli.__version__ import __version__
 
 if 'REQUESTS_CA_BUNDLE' not in os.environ:
     if os.environ.get('SSL_CERT_FILE'):

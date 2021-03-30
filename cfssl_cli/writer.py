@@ -9,8 +9,8 @@ from __future__ import print_function
 import logging
 from os.path import normpath, expanduser, expandvars, join
 
-from cfsslcli.checksums import validate_checksum
-from cfsslcli.crypto import convert_pem_to_der
+from cfssl_cli.checksums import validate_checksum
+from cfssl_cli.crypto import convert_pem_to_der
 
 log = logging.getLogger(__name__)
 
