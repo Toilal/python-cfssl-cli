@@ -5,6 +5,7 @@ description = "This CLI tool allows you to generate certificates from a remote C
 authors = ["Rémi Alvergnat <toilal.dev@gmail.com>"]
 keywords = ["cfssl", "ssl", "certificate", "certificates", "cli"]
 license = "MIT"
+readme = "README.md"
 repository = 'https://github.com/Toilal/python-cfssl-cli'
 homepage = 'https://github.com/Toilal/python-cfssl-cli'
 documentation = 'https://github.com/Toilal/python-cfssl-cli'
